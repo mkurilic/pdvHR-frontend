@@ -1,10 +1,22 @@
 <template>
+    <app-nav-bar />
     <div class="ira">
         <div class="naslov">
             <h4 class="unos">Unos Izlaznih Računa</h4>
         </div>   
     </div>
 </template>
+
+<script>
+import SomeClientNavBar from '@/components/partials/SomeClientNavBar.vue';
+export default {
+  
+  name: 'IraView',
+  components: {
+      'app-nav-bar':SomeClientNavBar
+  },
+}
+</script>
 
 <style lang="scss">
 .ira{

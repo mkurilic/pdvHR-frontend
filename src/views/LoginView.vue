@@ -1,4 +1,5 @@
 <template>
+  <app-nav-bar />
     <div class="login">
         <div class="row">
             <div class="col-sm-3"></div>
@@ -11,13 +12,19 @@
                                     <strong>Ups!</strong>
                                     {{ errorMessage }}
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="exampleInputEmail1" >Korisničko ime: </label>
-                                    <input v-model="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="Unesite korisničko ime">
+                                <div class="form-group row">
+                                    <label for="inputUsername" class="col-sm-2 col-form-label" >Korisničko ime: </label>
+                                    <div class="col-sm-10">
+                                      <input v-model="username" type="text" class="border border-black/30 rounded-md w-full px-4 py-2" id="inputEmail" placeholder="Unesite korisničko ime">
+                                    </div>
+                                    
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="exampleInputPassword1">Lozinka: </label>
-                                    <input v-model="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Unesite lozinku">
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-2 col-form-label">Lozinka: </label>
+                                    <div class="col-sm-10">
+                                      <input v-model="password" type="password" class="border border-black/30 rounded-md w-full px-4 py-2" id="inputPassword" placeholder="Unesite lozinku">
+                                    </div>
+                                    
                                 </div>
                                 <p class="card-text text-right">
                                     Nemaš račun?
@@ -37,6 +44,7 @@
 </template>
 
 <script>
+import NavBar from '@/components/partials/NavBar.vue';
 import { Auth } from '@/services';
 
 export default {
@@ -53,10 +61,12 @@ export default {
       console.log("Rezultat prijave ", success);
 
       if (success == true) {
-        this.$router.push({ name: 'home' });
+        this.$router.push({ name: 'authhome'});
       }
     }
-  }
+  }, components: {
+      'app-nav-bar':NavBar
+  },
 }
 </script>
 

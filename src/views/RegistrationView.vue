@@ -1,4 +1,5 @@
 <template>
+    <app-nav-bar />
     <div class="register">
         <div class="row">
             <div class="col-sm-3"></div>
@@ -8,24 +9,28 @@
                         <div class="card-body">
                             <form @submit.prevent="register">
                                 <div v-if="errorMessage" class="alert alert-danger">
-                                    <strong>Ups!</strong>
                                     {{ errorMessage }}
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="emailField">Korisničko ime:</label>
-                                    <input v-model="username" type="text" class="form-control" id="nameField" placeholder="Upišite korisničko ime" required>
+                                <div class="form-group row">
+                                    <label for="emailField" class="col-sm-2 col-form-label">Korisničko ime: </label>
+                                    <div class="col-sm-10"></div>
+                                    <input v-model="username" type="text" class="border border-black/30 rounded-md w-full px-4 py-2" id="usernameField" placeholder="Upišite korisničko ime" required>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="confirmPasswordField">E-mail:</label>
-                                    <input v-model="email" type="email" class="form-control" id="emailField" placeholder="Upisite email" required>
+                                <div class="form-group row">
+                                    <label for="nameField" class="col-sm-2 col-form-label">Ime: </label>
+                                    <div class="col-sm-10"></div><input v-model="firstname" type="text" class="border border-black/30 rounded-md w-full px-4 py-2" id="nameField" placeholder="Upišite svoje ime" required>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="passwordField">Lozinka:</label>
-                                    <input v-model="password" type="password" class="form-control" id="passwordField" placeholder="Upišite lozinku" required>
+                                <div class="form-group row">
+                                    <label for="confirmPasswordField" class="col-sm-2 col-form-label">E-mail: </label>
+                                    <div class="col-sm-10"></div><input v-model="email" type="email" class="border border-black/30 rounded-md w-full px-4 py-2" id="emailField" placeholder="Upišite email" required>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="confirmPasswordField">Potvrda lozinke:</label>
-                                    <input v-model="passwordConfirmation" type="password" class="form-control" id="confirmPasswordField" placeholder="Potvrdite lozinku" required>
+                                <div class="form-group row">
+                                    <label for="passwordField" class="col-sm-2 col-form-label">Lozinka:</label>
+                                    <div class="col-sm-10"></div><input v-model="password" type="password" class="border border-black/30 rounded-md w-full px-4 py-2" id="passwordField" placeholder="Upišite lozinku" required>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="confirmPasswordField" class="col-sm-2 col-form-label">Potvrda lozinke: </label>
+                                    <div class="col-sm-10"></div><input v-model="passwordConfirmation" type="password" class="border border-black/30 rounded-md w-full px-4 py-2" id="confirmPasswordField" placeholder="Potvrdite lozinku" required>
                                 </div>
                                 <div v-if="password != passwordConfirmation" class="alert alert-danger" role="alert">Lozinke nisu jednake.</div>
                                 <div class="text-center">
@@ -41,6 +46,7 @@
 </template>
 
 <script>
+import NavBar from '@/components/partials/NavBar.vue';
 import { Auth } from '@/services';
 export default {
     
@@ -48,28 +54,29 @@ export default {
         return {
             errorMessage: '',
             username:'',
-            name: '',
+            firstname: '',
             email: '',
             password: '',
             passwordConfirmation: ''
         }
-    },
+    }, components: {
+      'app-nav-bar':NavBar
+  },
     methods: {
         async register() {
             try {
-                let success = await Auth.register(this.username, this.email, this.password);
+                let success = await Auth.register(this.username, this.firstname, this.email, this.password);
                 console.log("Rezultat registracije ", success);
 
                 if (success == true) {
                     this.$router.push({ name: 'home' });
             }} catch (error) {
-                console.error("Greška prilikom registrirajse() ", error);
+                console.error("Greška prilikom registriracije ", error);
                     if (error.response === 11000) {
-          this.errorMessage = "Korisnik već postoji.";
-        } else {
-          this.errorMessage = "Registracija nije uspijela: Pokušaj ponovno.";
-        }
-        throw error;
+                        this.errorMessage = "Korisnik već postoji.";
+                    } else {
+                        this.errorMessage = "Registracija nije uspijela: Pokušaj ponovno.";
+                    }
       }
     
     }
@@ -148,6 +155,6 @@ export default {
     animation-delay: 0.3s;
 }
 .register{
-    padding-top: 50px;
+    padding-top: 100px;
 }
 </style>
