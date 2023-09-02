@@ -10,48 +10,56 @@
             <input class="box" v-model="rbr" type="text" id="rbr" required>
             <label class="item" for="rac">Račun: </label>
             <input v-model="rac" type="text" class="box" id="rac"  required>
-            <label class="item" for="r12">R1-R2 </label>
+            <label class="item">{{ r12.toLocaleUpperCase() }} </label>
             <label class="item" for="date">Nadnevak: </label>
-            <input v-model="date" type="date" class="box" id="date"  required>        
+            <input v-model="selectedDate" type="date" class="box" id="date" @input="formatDate" required>        
         </div>
         <div class="grid-supplier">
             <label class="item" for="supplier">Dobavljač: </label>
-            <select v-model="supplier" class="selection">
-                <option  @click="updateValues(supplier)" :key="supplier.id" v-for="supplier in suppliers">
-                    {{ supplier.supplierName }}
-                </option>
-            </select>
+            <VueMultiselect
+                v-model="supplier"
+                :options="suppliers"
+                placeholder="Odaberi dobavljača"
+                label="supplierName"
+                track-by="supplierName"
+                @update:model-value="updateValues(supplier)"
+            >
+            <template #noResult>
+                <router-link to="/suppliers/add">Dodajte novog dobavljača</router-link>
+            </template>
+            </VueMultiselect>
+
             <label class="item" for="oib">OIB: </label>
-            <input v-model="oib" type="text" class="box" id="oib"  required>
+            <input v-model="oib" type="text" class="box" id="oib" readonly>
             <label class="item" for="address">Adresa: </label>
-            <input v-model="address" type="text" class="box" id="address"  required>
+            <input v-model="address" type="text" class="box" id="address" readonly>
             <label class="item" for="city">Grad: </label>
-            <input v-model="city" type="text" class="box" id="city"  required>                   
+            <input v-model="city" type="text" class="box" id="city" readonly>                   
         </div>  
         <hr class="hr1" />
         <div class="grid-ura">
             <label class="item i1">Prolazne stavke</label>
             <input v-model="zeroPDV" type="number" step="0.01" class="box" @keydown.tab="update()">
             <label class="item i1">Porezna osnovica 5%</label>
-            <input v-model="five" type="number" step="0.01" class="box"  @keydown.tab="update()">
+            <input v-model="five" type="number" step="0.01" class="box"  @keydown.tab="updateFive()">
             <label class="item i3">Može se odbiti 5%</label>
             <input v-model="fiveCan" type="number" step="0.01" class="box"  @keydown.tab="update()">
             <label class="item i3">Ne može se odbiti 5%</label>
             <input v-model="fiveCannot" type="number" step="0.01" class="box"  @keydown.tab="update()">
             <label class="item i1">Porezna osnovica 13%</label>
-            <input v-model="thirteen" type="number" step="0.01" class="box"  @keydown.tab="update()">
+            <input v-model="thirteen" type="number" step="0.01" class="box"  @keydown.tab="updateThirteen()">
             <label class="item i3">Može se odbiti 13%</label>
             <input v-model="thirteenCan" type="number" step="0.01" class="box"  @keydown.tab="update()">
             <label class="item i3">Ne može se odbiti 13%</label>
             <input v-model="thirteenCannot" type="number" step="0.01" class="box"  @keydown.tab="update()">
             <label class="item i1">Porezna osnovica 25%</label>
-            <input v-model="twentyfive" type="number" step="0.01" class="box"  @keydown.tab="update()">
+            <input v-model="twentyfive" type="number" step="0.01" class="box"  @keydown.tab="updateTwentyfive()">
             <label class="item i3">Može se odbiti 25%</label>
             <input v-model="twentyfiveCan" type="number" step="0.01" class="box"  @keydown.tab="update()">
             <label class="item i3">Ne može se odbiti 25%</label>
             <input v-model="twentyfiveCannot" type="number" step="0.01" class="box"  @keydown.tab="update()">
             <label class="item i1">Iznos računa s porezom</label>
-            <input v-model="total" type="number" step="0.01" class="box"  @keydown.tab="update()">
+            <input v-model="total" type="number" step="0.01" class="box" readonly @keydown.tab="update()">
         </div>
         <hr class="hr1" />
         <button type="submit" class="button is-xl is-dark">Unesi račun</button>
@@ -62,6 +70,7 @@
 <script>
 import SomeClientNavBar from '@/components/partials/SomeClientNavBar.vue';
 import moment from 'moment'; 
+import VueMultiselect from 'vue-multiselect' ;
 import { Suppliers, Ura } from '@/services';
 
 export default {
@@ -70,9 +79,11 @@ export default {
   data() {
     return{
         suppliers: [],
+        r12: '',
         rbr: '',
         rac: '',
-        date: new Date().toISOString().split('T')[0],
+        selectedDate: new Date().toISOString().split('T')[0],
+        date: '',
         supplier: '',
         oib: '',
         address: '',
@@ -92,34 +103,53 @@ export default {
   },
   created() {
         this.fetchData()
+        this.formatDate()
     },
   components: {
-      'app-nav-bar':SomeClientNavBar
+      'app-nav-bar':SomeClientNavBar,
+      VueMultiselect
   },
   methods: {
     moment: function () {
         return moment();
   }, 
+  formatDate() {
+        this.date = moment(this.selectedDate).format("YYYY-MM-DD");
+    },
     updateValues(supplier) {
         this.oib = supplier.oib;
         this.address = supplier.address;
         this.city = supplier.city;
+        this.r12 = supplier.r12;
+    },
+    updateFive() {
+        this.fiveCan = (this.five * 0.05).toFixed(2);
+        this.update();
+    },
+    updateThirteen() {
+        this.thirteenCan = (this.thirteen * 0.13).toFixed(2);
+        this.update();
+    },
+    updateTwentyfive() {
+        this.twentyfiveCan = (this.twentyfive * 0.25).toFixed(2);
+        this.update()
     },
     update() {
-        this.fiveCan = (this.five * 0.05).toFixed(2);
-        this.thirteenCan = (this.thirteen * 0.13).toFixed(2);
-        this.twentyfiveCan = (this.twentyfive * 0.25).toFixed(2);
         let total = 0;
-        let myList = [this.zeroPDV, this.five, this.fiveCan, this.fiveCannot,
-                  this.thirteen, this.thirteenCan, this.thirteenCannot,
-                  this.twentyfive, this.twentyfiveCan, this.twentyfiveCannot]
-        for (let i = 0; i < myList.length; i++) {
-            if (myList[i] !== null) {
-                total += parseFloat(myList[i]);
-            }
+        let totalPdv = 0;
+        let pdvList = [this.fiveCan, this.fiveCannot, this.thirteenCan, this.thirteenCannot, this.twentyfiveCan, this.twentyfiveCannot]
+        let valueList = [this.zeroPDV, this.five, this.thirteen, this.twentyfive]
+
+        for (let i = 0; i < pdvList.length; i++) {
+            totalPdv += parseFloat(pdvList[i]);
         }
+        for (let i = 0; i < valueList.length; i++) {
+            total += parseFloat(valueList[i]);
+        }
+        total += totalPdv;
+
         this.total = total.toFixed(2);
-        
+        this.totalPdv = totalPdv;
     },    
     async fetchData() {
         this.suppliers = await Suppliers.getSuppliers(localStorage.getItem('clientId'));
@@ -128,26 +158,27 @@ export default {
     }, 
 
     async PostUra() {
-          let newUra = {
+        this.updateFive()
+        this.updateThirteen()
+        this.updateTwentyfive()
+        let newUra = {
             clientId: localStorage.getItem('clientId'),
             rbr: this.rbr,
             rac: this.rac,
             date: this.date,
             supplier: this.supplier,
-            oib: this.oib,
-            address: this.address,
-            city: this.city,
-            zeroPDV:this.zeroPDV,
-            five: this.five,
-            fiveCan:this.fiveCan,
-            fiveCannot:this.fiveCannot,
-            thirteen:this.thirteen,
-            thirteenCan:this.thirteenCan,
-            thirteenCannot:this.thirteenCannot,
-            twentyfive:this.twentyfive,
-            twentyfiveCan:this.twentyfiveCan,
-            twentyfiveCannot:this.twentyfiveCannot,
-            total:this.total,
+            zeroPDV:parseFloat(this.zeroPDV).toFixed(2),
+            five: parseFloat(this.five).toFixed(2),
+            fiveCan:parseFloat(this.fiveCan).toFixed(2),
+            fiveCannot:parseFloat(this.fiveCannot).toFixed(2),
+            thirteen:parseFloat(this.thirteen).toFixed(2),
+            thirteenCan:parseFloat(this.thirteenCan).toFixed(2),
+            thirteenCannot:parseFloat(this.thirteenCannot).toFixed(2),
+            twentyfive:parseFloat(this.twentyfive).toFixed(2),
+            twentyfiveCan:parseFloat(this.twentyfiveCan).toFixed(2),
+            twentyfiveCannot:parseFloat(this.twentyfiveCannot).toFixed(2),
+            total:parseFloat(this.total).toFixed(2),
+            totalPdv:parseFloat(this.totalPdv).toFixed(2),
           };
           try {
             await Ura.add(newUra);
@@ -162,6 +193,7 @@ export default {
 }
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style lang="scss">
 
 .unos{
