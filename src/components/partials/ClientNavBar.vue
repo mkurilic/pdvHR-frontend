@@ -18,8 +18,6 @@
     </div>
     <div id="navbar" class="navbar-menu">
       <div class="navbar-start">
-        <router-link to="/ura" class="navbar-item">URA</router-link>
-        <router-link to="/ira" class="navbar-item">IRA</router-link>
           
       </div>
       <div class="navbar-end">

@@ -18,8 +18,12 @@
     </div>
     <div id="navbar" class="navbar-menu">
       <div class="navbar-start">
-        <router-link to="/ura" class="navbar-item">Unos URA</router-link>
-        <router-link to="/ira" class="navbar-item">Unos IRA</router-link>
+        <router-link to="/ura/insert" class="navbar-item">Unos URA</router-link>
+        <router-link to="/ura" class="navbar-item">Ispis URA</router-link>
+        <router-link to="/ira/insert" class="navbar-item">Unos IRA</router-link>
+        <router-link to="/ira" class="navbar-item">Ispis IRA</router-link>
+        <router-link to="/suppliers" class="navbar-item">Dobavljači</router-link>
+        <router-link to="/buyers" class="navbar-item">Kupci</router-link>
           
       </div>
       <div class="navbar-end">
