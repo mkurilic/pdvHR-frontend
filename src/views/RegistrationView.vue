@@ -66,8 +66,6 @@ export default {
         async register() {
             try {
                 let success = await Auth.register(this.username, this.firstname, this.email, this.password);
-                console.log("Rezultat registracije ", success);
-
                 if (success == true) {
                     this.$router.push({ name: 'home' });
             }} catch (error) {

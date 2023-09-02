@@ -26,8 +26,8 @@
                           <input v-model="office" type="text" class="box" id="office"  required>
                       </div> 
                       <div v-if="oib.length != 11" class="alert alert-danger" role="alert">Ispravan OIB sadrži 11 znamenki!</div>              
-                      <div v-else class="text-center">
-                          <button type="submit" class="button is-xl is-dark">Unesi klijenta</button>
+                      <div v-else>
+                          <button type="submit" class="button is-dark">Unesi klijenta</button>
                       </div> 
                   </form>                              
               </div>

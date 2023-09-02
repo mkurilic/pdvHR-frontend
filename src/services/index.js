@@ -52,7 +52,8 @@ let Clients = {
             oib: doc.oib,
             clientName: doc.clientName,
             address: doc.address,
-            city: doc.city
+            city: doc.city,
+            code: doc.code
         };
     }, 
     add(newClient) {
@@ -70,7 +71,8 @@ let Suppliers = {
                 supplierName: doc.supplierName,
                 oib: doc.oib,
                 address: doc.address,
-                city: doc.city
+                city: doc.city,
+                r12: doc.r12
             }
         })
     },
@@ -107,9 +109,6 @@ let Ura = {
                 rac: doc.rac,
                 date: doc.date,
                 supplier: doc.supplier,
-                oib: doc.oib,
-                address: doc.address,
-                city: doc.city,
                 zeroPDV:doc.zeroPDV,
                 five: doc.five,
                 fiveCan:doc.fiveCan,
@@ -120,14 +119,104 @@ let Ura = {
                 twentyfive:doc.twentyfive,
                 twentyfiveCan:doc.twentyfiveCan,
                 twentyfiveCannot:doc.twentyfiveCannot,
-                total:doc.total
+                total:doc.total,
+                totalPdv:doc.totalPdv,
+            }
+        })
+    },
+    async getAllByDate(clientId, dateFrom, dateTo) {
+        let response = await Service.get(`/ura/${clientId}/${dateFrom}/${dateTo}`)
+        return response.data.map(doc => {
+            return {
+                id: doc._id,
+                rbr: doc.rbr,
+                rac: doc.rac,
+                date: doc.date,
+                supplier: doc.supplier,
+                zeroPDV:doc.zeroPDV,
+                five: doc.five,
+                fiveCan:doc.fiveCan,
+                fiveCannot:doc.fiveCannot,
+                thirteen:doc.thirteen,
+                thirteenCan:doc.thirteenCan,
+                thirteenCannot:doc.thirteenCannot,
+                twentyfive:doc.twentyfive,
+                twentyfiveCan:doc.twentyfiveCan,
+                twentyfiveCannot:doc.twentyfiveCannot,
+                total:doc.total,
+                totalPdv:doc.totalPdv,
             }
         })
     },
     add(newUra) {
         return Service.post('/ura', newUra);
     }
+}
 
+let Ira = {
+    async getAll(clientId) {
+        let response = await Service.get(`/ira/${clientId}`)
+        return response.data.map(doc => {
+            return {
+                id: doc._id,
+                rbr: doc.rbr,
+                rac: doc.rac,
+                date: doc.date,
+                buyer: doc.buyer,
+                total: doc.total,
+                totalZero: doc.totalZero,
+                tuzemniPrijenos: doc.tuzemniPrijenos,
+                isporukeDC: doc.isporukeDC,
+                isporukeEU: doc.isporukeEU,
+                uslugeEU: doc.uslugeEU,
+                bezSjedistaRH: doc.bezSjedistaRH,
+                dobraDC: doc.dobraDC,
+                npsEU: doc.npsEU,
+                tuzemstvo: doc.tuzemstvo,
+                izvoz: doc.izvoz,
+                ostalo: doc.ostalo,
+                five: doc.five,
+                fiveP: doc.fiveP,
+                thirteen: doc.thirteen,
+                thirteenP: doc.thirteenP,
+                twentyfive: doc.twentyfive,
+                twentyfiveP: doc.twentyfiveP,
+            }
+        })
+    },
+    async getAllByDate(clientId, dateFrom, dateTo) {
+        let response = await Service.get(`/ira/${clientId}/${dateFrom}/${dateTo}`)
+        return response.data.map(doc => {
+            return {
+                id: doc._id,
+                rbr: doc.rbr,
+                rac: doc.rac,
+                date: doc.date,
+                buyer: doc.buyer,
+                total: doc.total,
+                totalZero: doc.totalZero,
+                tuzemniPrijenos: doc.tuzemniPrijenos,
+                isporukeDC: doc.isporukeDC,
+                isporukeEU: doc.isporukeEU,
+                uslugeEU: doc.uslugeEU,
+                bezSjedistaRH: doc.bezSjedistaRH,
+                dobraDC: doc.dobraDC,
+                npsEU: doc.npsEU,
+                tuzemstvo: doc.tuzemstvo,
+                izvoz: doc.izvoz,
+                ostalo: doc.ostalo,
+                five: doc.five,
+                fiveP: doc.fiveP,
+                thirteen: doc.thirteen,
+                thirteenP: doc.thirteenP,
+                twentyfive: doc.twentyfive,
+                twentyfiveP: doc.twentyfiveP,
+            }
+        })
+    },
+    add(newIra) {
+        return Service.post('/ira', newIra);
+    }
 }
 
 let Auth = {
@@ -195,4 +284,4 @@ let Auth = {
     },
 };
 
-export {Service, Auth, Clients, Suppliers, Ura, Buyers}
+export {Service, Auth, Clients, Suppliers, Ura, Buyers, Ira}
