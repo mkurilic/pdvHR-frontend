@@ -1,40 +1,133 @@
 <template>
     <app-nav-bar />
-    <div class="ira">
-        <div class="naslov">
-            <h4 class="unos">Unos Izlaznih Računa</h4>
-        </div>   
-    </div>
-</template>
+    <form @submit.prevent="GetBookIra" id="form">
+        <div class="center-container">
+            <label class="text">Odaberite vrstu razdoblja oporezivanja: </label>
+            <select class="large-select" v-model="selectedOption">
+                <option value="month">Mjesečno</option>
+                <option value="three-months">Tromjesečno</option>
+            </select>
+        </div>
+
+        <div class="center-container" v-if="selectedOption === 'month'">
+            <month-picker
+                lang="hr"
+                v-model="selectedMonth"
+                id="monthPicker"
+                @change="getDate"
+            />
+        </div>
+  
+      <div class="center-container" v-else-if="selectedOption === 'three-months'">
+        <label class="text">Odaberite tromjesečje: </label>
+        <select class="large-select" v-model="selectedMonths">
+            <option value="first">Siječanj - Ožujak</option>
+            <option value="second">Travanj - Lipanj</option>
+            <option value="third">Srpanj - Rujan</option>
+            <option value="fourth">Listopad - Prosinac</option>
+      </select>
+      </div>
+        <div class="center-container" v-if="selectedOption !== null">
+            <button type="submit" class="button is-dark">Pretraži</button>
+        </div>
+
+    </form>
+  </template>
+  
 
 <script>
 import SomeClientNavBar from '@/components/partials/SomeClientNavBar.vue';
-export default {
+import { MonthPicker } from 'vue-month-picker';
   
-  name: 'IraView',
-  components: {
+  export default {
+    components: {
+      MonthPicker,
       'app-nav-bar':SomeClientNavBar
+    },
+    watch: {
+        selectedOption() {
+      // Reset the other variables to null when selectedOption changes
+            this.selectedMonth = null;
+            this.selectedMonths = null;
+    },
   },
-}
-</script>
+    methods: {
+        getDate (date) {
+            this.date = date
+            this.selectedMonth = 'selected'
+        },
+        getThreeMonths() {
+            switch (this.selectedMonths) {
+                case 'first':
+                    this.date.from = new Date('2023-01-01T00:00:00');
+                    this.date.to = new Date('2023-04-01T00:00:00');
+                    break;
+                case 'second':
+                    this.date.from = new Date('2023-04-01T00:00:00');
+                    this.date.to = new Date('2023-07-01T00:00:00');
+                    break;
+                case 'third':
+                    this.date.from = new Date('2023-07-01T00:00:00');
+                    this.date.to = new Date('2023-10-01T00:00:00');
+                    break;
+                case 'fourth':
+                    this.date.from = new Date('2023-10-01T00:00:00');
+                    this.date.to = new Date('2024-01-01T00:00:00');
+                    break;
+                default:
+                    this.date.from = null;
+                    this.date.to = null;
+                    break;
+      }
+        },
+        async GetBookIra() {
+            if (this.selectedMonth === null) {
+                this.getThreeMonths()
+            } 
+            let dateFrom = this.date.from;
+            let dateTo = this.date.to;            
+            
+            this.$router.push({
+                name: 'iraPreview',
+                query: {
+                    dateFrom: dateFrom,
+                    dateTo: dateTo
+                }},
+                );
+        }
+    },
+    data() {
+      return {
+        selectedOption: null,
+        selectedMonth: null,
+        selectedMonths: null,
+        date: {
+            from: null,
+            to: null,
+            month: null
+        }
+      };
+    },
+  };
+  </script>
 
-<style lang="scss">
-.ira{
-    padding-top: 100px;
+<style>
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
-.card-header{
-    color: black;
+.large-select {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
 }
-.naslov{
-    background:rgb(255, 255, 255);
-    max-width: 920px;
-    margin: 20px auto;
-    padding:  20px 30px;
-    border-radius: 10px 120px 10px 10px;
-    box-shadow: 10px 30px 50px rgba(0,0,0,0.1)
+.text{
+    padding: 10px;
+    font-size: 16px; 
 }
-.unos{
-    font-size: 40px;
-    text-align: center;
+.button{
+    width: fit-content;
 }
 </style>
