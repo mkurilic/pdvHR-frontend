@@ -77,6 +77,10 @@
                 <td align="right">{{ ira.twentyfive }}</td>
                 <td align="right">{{ ira.twentyfiveP }}</td>
             </tr>
+            <tr>
+                <th colspan="5">UKUPNO</th>
+                <th class="value" align="right" v-for="n in 18" :key="n">{{ parseFloat(total[n-1]).toFixed(2) }}</th>
+            </tr>
         </table>
     </div>
 </template>
@@ -94,7 +98,8 @@ export default {
         iraList: [],
         client: [],
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
+        total: []
     }
   },
   created() {
@@ -116,10 +121,34 @@ export default {
     getFormatedDate : function (date) {
         return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY.');
     },
-   
+    calculateTotals(){
+        let total = new Array(18).fill(0)
+        for (const ira of this.iraList) {
+                total[0] +=  parseFloat(ira.total);
+                total[1] +=  parseFloat(ira.tuzemniPrijenos);
+                total[2] +=  parseFloat(ira.isporukeDC);
+                total[3] +=  parseFloat(ira.isporukeEU);
+                total[4] +=  parseFloat(ira.uslugeEU);
+                total[5] +=  parseFloat(ira.bezSjedistaRH);
+                total[6] +=  parseFloat(ira.dobraDC);
+                total[7] +=  parseFloat(ira.npsEU);
+                total[8] +=  parseFloat(ira.tuzemstvo);
+                total[9] +=  parseFloat(ira.izvoz);
+                total[10] +=  parseFloat(ira.ostalo);
+                total[11] +=  parseFloat(ira.totalZero);
+                total[12] +=  parseFloat(ira.five);
+                total[13] +=  parseFloat(ira.fiveP);
+                total[14] +=  parseFloat(ira.thirteen);
+                total[15] +=  parseFloat(ira.thirteenP);
+                total[16] +=  parseFloat(ira.twentyfive);
+                total[17] +=  parseFloat(ira.twentyfiveP);
+        }
+        this.total = total;
+    },
     async fetchData() {
         this.iraList = await Ira.getAllByDate(localStorage.getItem('clientId'), this.dateFrom, this.dateTo);
         this.client = await Clients.getOne(localStorage.getItem('clientId'))
+        this.calculateTotals()
     }
   }
 }
@@ -133,6 +162,9 @@ export default {
     font-size: 12px;   
 }
 .th, td {
+    padding: 5px;
+}
+.value{
     padding: 5px;
 }
 .rotated {

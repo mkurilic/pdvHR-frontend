@@ -12,7 +12,6 @@
         <h1 class="naslov">KNJIGA PRIMLJENIH (ULAZNIH) RAČUNA<br/>{{ getFormatedDate(dateFrom) }} - {{ getFormatedDate(dateTo) }}
         </h1>
         
-
         <table class="center" width="90%">
             <tr>
                 <th rowspan="3">RED. BROJ</th>
@@ -68,6 +67,10 @@
                 <td align="right">{{ ura.twentyfiveCan }}</td>
                 <td align="right">{{ ura.twentyfiveCannot }}</td>
             </tr>
+            <tr>
+                <th colspan="5">UKUPNO</th>
+                <th class="value" align="right" v-for="n in 12" :key="n">{{ parseFloat(total[n-1]).toFixed(2) }}</th>
+            </tr>
         </table>
     </div>
 </template>
@@ -85,7 +88,8 @@ export default {
         uraList: [],
         client: [],
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
+        total: []
     }
   },
   created() {
@@ -109,10 +113,29 @@ export default {
     getFormatedDate : function (date) {
         return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY.');
     },
+    calculateTotals(){
+        let total = new Array(12).fill(0)
+        for (const ura of this.uraList) {
+            total[0] += parseFloat(ura.zeroPDV);
+            total[1] += parseFloat(ura.five);
+            total[2] += parseFloat(ura.thirteen);
+            total[3] += parseFloat(ura.twentyfive);
+            total[4] += parseFloat(ura.total);
+            total[5] += parseFloat(ura.totalPdv);
+            total[6] += parseFloat(ura.fiveCan);
+            total[7] += parseFloat(ura.fiveCannot);
+            total[8] += parseFloat(ura.thirteenCan);
+            total[9] += parseFloat(ura.thirteenCannot);
+            total[10] += parseFloat(ura.twentyfiveCan);
+            total[11] += parseFloat(ura.twentyfiveCannot);
+        }
+        this.total = total;
+    },
    
     async fetchData() {
         this.uraList = await Ura.getAllByDate(localStorage.getItem('clientId'), this.dateFrom, this.dateTo);
         this.client = await Clients.getOne(localStorage.getItem('clientId'))
+        this.calculateTotals()
     }
   }
 }
@@ -126,6 +149,9 @@ export default {
     
 }
 .th, td {
+    padding: 5px;
+}
+.value{
     padding: 5px;
 }
 .center {

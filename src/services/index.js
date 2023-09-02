@@ -3,7 +3,7 @@ import $router from '@/router'
 
 // instanca axios-a 
 let Service = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: 'https://pdvhrbackend.onrender.com',
     timeout: 10000
 });
 
