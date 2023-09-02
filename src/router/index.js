@@ -5,7 +5,6 @@ import LoginView from '../views/LoginView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
 import ClientsView from '../views/ClientsView.vue'
 import AddClient from '../views/AddClient.vue'
-import IraView from '../views/IraView.vue'
 
 const routes = [
   {
@@ -64,14 +63,34 @@ const routes = [
     component: () => import('../views/AddBuyer.vue')
   },
   {
+    path: '/ura/insert',
+    name: 'ura/insert',
+    component: () => import('../views/InsertUraView.vue')
+  },
+  {
     path: '/ura',
     name: 'ura',
-    component: () => import('../views/InsertUraView.vue')
+    component: () => import('../views/UraView.vue')
   },
   {
     path: '/ira',
     name: 'ira',
-    component: IraView
+    component: () => import('../views/IraView.vue')
+  },
+  {
+    path: '/ura/preview',
+    name: 'uraPreview',
+    component: () => import('../views/UraPreview.vue')
+  },
+  {
+    path: '/ira/insert',
+    name: 'iraInsert',
+    component: () => import('../views/InsertIraView.vue')
+  },
+  {
+    path: '/ira/preview',
+    name: 'iraPreview',
+    component: () => import('../views/IraPreview.vue')
   }
 ]
 

@@ -8,17 +8,17 @@
         </div>
         <div class="grid-container">
             <div class="item i1">
-                <router-link to="/ura">
+                <router-link to="/ura/insert">
                     <button class="button">URA - unos knjige</button>
                 </router-link>
             </div>
             <div class="item i3">
-                <router-link to="/ira">
+                <router-link to="/ira/insert">
                     <button class="button">IRA - unos knjige</button>
                 </router-link>
             </div>
             <div class="item i2">
-                <router-link to="/login">
+                <router-link to="/pdv">
                     <button class="button">Obračun PDV obrasca</button>
                 </router-link>
             </div>
@@ -28,27 +28,27 @@
                 </router-link>
             </div>
             <div class="item i3">
-                <router-link to="/ura">
+                <router-link to="/ira">
                     <button class="button">Knjiga IRA - ispis</button>
                 </router-link>
             </div>
             <div class="item i1">
-                <router-link to="/ira">
+                <router-link to="/uraPlaceni">
                     <button class="button">Plaćeni URA - ispis</button>
                 </router-link>
             </div>
             <div class="item i3">
-                <router-link to="/ira">
+                <router-link to="/iraPlaceni">
                     <button class="button">Plaćeni IRA - ispis</button>
                 </router-link>
             </div>
             <div class="item i1">
-                <router-link to="/ira">
+                <router-link to="/karticaDob">
                     <button class="button">Kartica dobavljača</button>
                 </router-link>
             </div>
             <div class="item i3">
-                <router-link to="/ira">
+                <router-link to="/karticaKup">
                     <button class="button">Kartica kupaca</button>
                 </router-link>
             </div>
@@ -62,10 +62,7 @@
                     <button class="button">Kupci</button>
                 </router-link>
             </div>
-            
-
         </div>
-
     </div>
 </template>
   
@@ -90,7 +87,6 @@
     methods: {
         async fetchClients() {
             this.client = await Clients.getOne(this.$route.params.id);
-            console.log(this.client)
         },
 }}
   </script>
